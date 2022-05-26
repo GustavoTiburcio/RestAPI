@@ -89,32 +89,50 @@ const addProduct = (req, res) => {
 
     //checando se nome ja existe
     pool.query(queries.checkProductExists, [name], (error, results) => {
+        if (error) {
+            return res.status(500).send({
+                error: error
+            });
+        }
         if (results.rows.length) {
-            res.status(406).json({ message: 'Produto já existente, não foi possível adicionar.' });
+            res.status(406).json({ message: 'Produto já existente, não foi possível inserir.' });
             return;
         }
-        //adicionando registro ao db
-        pool.query(queries.addProduct, [name, price], (error, results) => {
+        //checando se existe a categoria
+        pool.query(queries.checkCategoryExists, [category_id], (error, results) => {
             if (error) {
                 return res.status(500).send({
                     error: error
                 });
             }
-            const response = {
-                message: 'Produto inserido com sucesso.',
-                createdProduct: {
-                    id: results.rows[0].id,
-                    name: name,
-                    price: price,
-                    category_id: category_id 
-                },
-                request: {
-                    type: 'GET',
-                    description: 'Retorna todos os produtos',
-                    url: 'http://localhost:3000/api/products'
-                }
+            if (!results.rows.length) {
+                res.status(404).json({ message: 'A category_id informada não existe na tabela categoria.' });
+                console.log('entrou');
+                return;
             }
-            res.status(201).send(response);
+            //adicionando registro ao db
+            pool.query(queries.addProduct, [name, price, category_id], (error, results) => {
+                if (error) {
+                    return res.status(500).send({
+                        error: error
+                    });
+                }
+                const response = {
+                    message: 'Produto inserido com sucesso.',
+                    createdProduct: {
+                        id: results.rows[0].id,
+                        name: name,
+                        price: price,
+                        category_id: category_id
+                    },
+                    request: {
+                        type: 'GET',
+                        description: 'Retorna todos os produtos',
+                        url: 'http://localhost:3000/api/products'
+                    }
+                }
+                res.status(201).send(response);
+            });
         });
     });
 };
@@ -176,26 +194,40 @@ const updateProduct = (req, res) => {
             return;
         }
 
-        pool.query(queries.updateProduct, [name, price, category_id, id], (error, results) => {
+        pool.query(queries.checkCategoryExists, [category_id], (error, results) => {
             if (error) {
                 return res.status(500).send({
                     error: error
                 });
             }
-            const response = {
-                mensagem: 'Produto alterado com sucesso',
-                editedProduct:{
-                    id: id,
-                    name: name,
-                    price: price,
-                    request: {
-                        type: 'GET',
-                        description: 'Retorna os detalhes de um produto em especifico',
-                        url: 'https://localhost:3000/api/products/' + id
+            if (!results.rows.length) {
+                res.status(404).json({ message: 'A category_id informada não existe na tabela categoria.' });
+                console.log('entrou');
+                return;
+            }
+
+            pool.query(queries.updateProduct, [name, price, category_id, id], (error, results) => {
+                if (error) {
+                    return res.status(500).send({
+                        error: error
+                    });
+                }
+                const response = {
+                    mensagem: 'Produto alterado com sucesso',
+                    editedProduct: {
+                        id: id,
+                        name: name,
+                        price: price,
+                        category_id: category_id,
+                        request: {
+                            type: 'GET',
+                            description: 'Retorna os detalhes de um produto em especifico',
+                            url: 'https://localhost:3000/api/products/' + id
+                        }
                     }
                 }
-            }
-            res.status(200).send(response);
+                res.status(200).send(response);
+            });
         });
     });
 };
