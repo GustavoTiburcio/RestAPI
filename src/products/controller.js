@@ -107,7 +107,6 @@ const addProduct = (req, res) => {
             }
             if (!results.rows.length) {
                 res.status(404).json({ message: 'A category_id informada não existe na tabela categoria.' });
-                console.log('entrou');
                 return;
             }
             //adicionando registro ao db
@@ -202,7 +201,6 @@ const updateProduct = (req, res) => {
             }
             if (!results.rows.length) {
                 res.status(404).json({ message: 'A category_id informada não existe na tabela categoria.' });
-                console.log('entrou');
                 return;
             }
 

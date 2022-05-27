@@ -39,7 +39,7 @@ const getCategoryById = (req, res) => {
 
         if (noCategoryFound) {
             res.status(404).json({ message: 'Categoria inexistente, não foi possível buscar informações.' });
-            return
+            return;
         }
         const response = {
             RowsCount: results.rowCount,
@@ -151,7 +151,7 @@ const updateCategory = (req, res) => {
                     name: category,
                     request: {
                         type: 'GET',
-                        description: 'Retorna os detalhes de um produto em especifico',
+                        description: 'Retorna os detalhes de um produto em específico.',
                         url: 'https://localhost:3000/api/products/' + id
                     }
                 }
