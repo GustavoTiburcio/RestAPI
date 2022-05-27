@@ -47,7 +47,6 @@ const getOrderById = (req, res) => {
         }
         order = results;
         order.rows[0]['netAmount'] = order.rows[0].amount - order.rows[0].discount;
-        console.log(order.rows)
         pool.query(queries.getOrderProductsByOrderId, [id], (error, results) => {
             if (error) {
                 return res.status(500).send({
@@ -107,10 +106,64 @@ const addOrder = (req, res) => {
     });
 };
 
+const removeOrder = (req, res) => {
+    const id = parseInt(req.params.id);
+
+    pool.query(queries.getOrderById, [id], (error, results) => {
+        if (error) {
+            return res.status(500).send({
+                error: error
+            });
+        }
+        const noOrderFound = !results.rows.length;
+
+        if (noOrderFound) {
+            res.status(404).json({ message: 'Venda inexistente, não foi possível ser removido.' });
+            return;
+        }
+
+        pool.query(queries.removeOrderProducts, [id], (error, results) => {
+            if (error) {
+                return res.status(500).send({
+                    error: error
+                });
+            }
+            pool.query(queries.removeOrder, [id], (error, results) => {
+                if (error) {
+                    return res.status(500).send({
+                        error: error
+                    });
+                }
+                const response = {
+                    message: `Venda ${id} removida com sucesso.`,
+                    request: {
+                        type: 'POST',
+                        description: 'Insere uma venda',
+                        url: 'http://localhost:3000/api/orders',
+                        body: {
+                            customer: 'String',
+                            discount: 'Number',
+                            amount: 'Number',
+                            order_date: 'Date',
+                            orderProducts: [{
+                                product_id: 'Number',
+                                product_price: 'Number',
+                                quantity: 'Number'
+                            }]
+                        }
+                    }
+                }
+                res.status(200).send(response)
+            });
+        })
+    });
+};
+
 
 module.exports = {
     getOrders,
     getOrderById,
     addOrder,
+    removeOrder,
 
 }
