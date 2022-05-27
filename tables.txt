@@ -68,6 +68,7 @@ CREATE TABLE public.orders_products
     product_id integer,
     order_id integer,
     product_price double precision,
+    quantity double precision,
     CONSTRAINT orders_products_pkey PRIMARY KEY (id),
     CONSTRAINT order_id FOREIGN KEY (order_id)
         REFERENCES public.orders (id) MATCH SIMPLE

@@ -2,6 +2,7 @@ const express = require('express');
 const productsRoutes = require('./src/products/routes')
 const categorysRoutes = require('./src/categorys/routes')
 const tablesRoutes = require('./src/tables/routes')
+const ordersRoutes = require('./src/orders/routes')
 
 const app = express();
 const port = 3000;
@@ -15,6 +16,7 @@ app.get('/', (req, res) =>{
 app.use('/api/products', productsRoutes);
 app.use('/api/categorys', categorysRoutes);
 app.use('/api/tables', tablesRoutes);
+app.use('/api/orders', ordersRoutes);
 
 
 app.listen(port, () => console.log(`Está rodando na porta ${port}`));
