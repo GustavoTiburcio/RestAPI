@@ -163,7 +163,7 @@ const updateTableNumber = (req, res) => {
                         request: {
                             type: 'GET',
                             description: 'Retorna os detalhes de uma Mesa em específico.',
-                            url: 'https://localhost:3000/api/products/' + id
+                            url: 'https://localhost:3000/api/tables/' + id
                         }
                     }
                 }
@@ -205,7 +205,7 @@ const changeTableValues = (req, res) => {
                     request: {
                         type: 'GET',
                         description: 'Retorna os detalhes de uma Mesa em específico.',
-                        url: 'https://localhost:3000/api/products/' + id
+                        url: 'https://localhost:3000/api/tables/' + id
                     }
                 }
             }

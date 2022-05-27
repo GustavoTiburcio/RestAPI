@@ -17,7 +17,7 @@ const getCategorys = (req, res) => {
                     request: {
                         type: 'GET',
                         description: 'Retorna os detalhes de uma categoria específica.',
-                        url: 'http://localhost:3000/api/category/' + category.id
+                        url: 'http://localhost:3000/api/categorys/' + category.id
                     }
                 }
             })
@@ -47,7 +47,7 @@ const getCategoryById = (req, res) => {
             request: {
                 type: 'GET',
                 description: 'Retorna todos as categorias',
-                url: 'http://localhost:3000/api/category'
+                url: 'http://localhost:3000/api/categorys'
             },
         }
         res.status(200).send(response);
@@ -77,7 +77,7 @@ const addCategory = (req, res) => {
                 request: {
                     type: 'GET',
                     description: 'Retorna todas as categorias',
-                    url: 'http://localhost:3000/api/category'
+                    url: 'http://localhost:3000/api/categorys'
                 }
             }
             res.status(201).send(response);
@@ -111,7 +111,7 @@ const removeCategory = (req, res) => {
                 request: {
                     type: 'POST',
                     description: 'Insere uma categoria',
-                    url: 'http://localhost:3000/api/category',
+                    url: 'http://localhost:3000/api/categorys',
                     body: {
                         name: 'String',
                     }
@@ -151,8 +151,8 @@ const updateCategory = (req, res) => {
                     name: category,
                     request: {
                         type: 'GET',
-                        description: 'Retorna os detalhes de um produto em específico.',
-                        url: 'https://localhost:3000/api/products/' + id
+                        description: 'Retorna os detalhes de uma Categoria em específico.',
+                        url: 'https://localhost:3000/api/categorys/' + id
                     }
                 }
             }
