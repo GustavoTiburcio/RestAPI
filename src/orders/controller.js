@@ -56,7 +56,9 @@ const getOrderById = (req, res) => {
             const response = {
                 RowsCount: order.rowCount,
                 order: order.rows,
-                orderProducts: results.rows,
+                orderProducts: results.rows.map(OrderProduct => {
+                    return { product_id: OrderProduct.product_id, product_price: OrderProduct.product_price, quantity: OrderProduct.quantity }
+                }),
                 request: {
                     type: 'GET',
                     description: 'Retorna todos as vendas',

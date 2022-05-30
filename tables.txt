@@ -52,7 +52,7 @@ CREATE TABLE public.orders
     customer character varying(255) COLLATE pg_catalog."default",
     discount double precision,
     amount double precision,
-    order_date date,
+    order_date timestamp without time zone,
     CONSTRAINT orders_pkey PRIMARY KEY (id)
 )
 
