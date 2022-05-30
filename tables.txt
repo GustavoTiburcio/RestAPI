@@ -1,4 +1,4 @@
-CREATE TABLE public.categorys
+CREATE TABLE IF NOT EXISTS public.categories
 (
     id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
     category character varying(255) COLLATE pg_catalog."default",
@@ -7,9 +7,8 @@ CREATE TABLE public.categorys
 
 TABLESPACE pg_default;
 
-ALTER TABLE public.categorys
+ALTER TABLE IF EXISTS public.categories
     OWNER to postgres;
-
 
 
 CREATE TABLE public.products
@@ -20,7 +19,7 @@ CREATE TABLE public.products
     category_id integer,
     CONSTRAINT products_pkey PRIMARY KEY (id),
     CONSTRAINT category_id FOREIGN KEY (category_id)
-        REFERENCES public.categorys (id) MATCH SIMPLE
+        REFERENCES public.categories (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID

@@ -1,8 +1,8 @@
 const pool = require('../../db');
 const queries = require('./queries');
 
-const getCategorys = (req, res) => {
-    pool.query(queries.getCategorys, (error, results) => {
+const getCategories = (req, res) => {
+    pool.query(queries.getCategories, (error, results) => {
         if (error) {
             return res.status(500).send({
                 error: error
@@ -10,14 +10,14 @@ const getCategorys = (req, res) => {
         }
         const response = {
             RowsCount: results.rowCount,
-            categorys: results.rows.map(category => {
+            categories: results.rows.map(category => {
                 return {
                     id: category.id,
                     name: category.category,
                     request: {
                         type: 'GET',
                         description: 'Retorna os detalhes de uma categoria específica.',
-                        url: 'http://localhost:3000/api/categorys/' + category.id
+                        url: 'http://localhost:3000/api/categories/' + category.id
                     }
                 }
             })
@@ -47,7 +47,7 @@ const getCategoryById = (req, res) => {
             request: {
                 type: 'GET',
                 description: 'Retorna todos as categorias',
-                url: 'http://localhost:3000/api/categorys'
+                url: 'http://localhost:3000/api/categories'
             },
         }
         res.status(200).send(response);
@@ -77,7 +77,7 @@ const addCategory = (req, res) => {
                 request: {
                     type: 'GET',
                     description: 'Retorna todas as categorias',
-                    url: 'http://localhost:3000/api/categorys'
+                    url: 'http://localhost:3000/api/categories'
                 }
             }
             res.status(201).send(response);
@@ -111,7 +111,7 @@ const removeCategory = (req, res) => {
                 request: {
                     type: 'POST',
                     description: 'Insere uma categoria',
-                    url: 'http://localhost:3000/api/categorys',
+                    url: 'http://localhost:3000/api/categories',
                     body: {
                         name: 'String',
                     }
@@ -152,7 +152,7 @@ const updateCategory = (req, res) => {
                     request: {
                         type: 'GET',
                         description: 'Retorna os detalhes de uma Categoria em específico.',
-                        url: 'https://localhost:3000/api/categorys/' + id
+                        url: 'https://localhost:3000/api/categories/' + id
                     }
                 }
             }
@@ -162,7 +162,7 @@ const updateCategory = (req, res) => {
 }
 
 module.exports = {
-    getCategorys,
+    getCategories,
     getCategoryById,
     addCategory,
     removeCategory,

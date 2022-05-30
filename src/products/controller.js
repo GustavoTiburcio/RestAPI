@@ -77,7 +77,7 @@ const getProductsByCategoryId = (req, res) => {
             request: {
                 type: 'GET',
                 description: 'Retorna lista de categorias',
-                url: 'http://localhost:3000/api/categorys'
+                url: 'http://localhost:3000/api/categories'
             },
         }
         res.status(200).send(response);

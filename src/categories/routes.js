@@ -3,7 +3,7 @@ const controller = require('./controller');
 
 const router = Router();
 
-router.get('/', controller.getCategorys);
+router.get('/', controller.getCategories);
 router.get('/:id', controller.getCategoryById);
 router.post('/', controller.addCategory);
 router.put('/:id', controller.updateCategory);
