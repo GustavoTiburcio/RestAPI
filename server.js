@@ -6,7 +6,7 @@ const tablesRoutes = require('./src/tables/routes')
 const ordersRoutes = require('./src/orders/routes')
 
 const app = express();
-const port = 7070;
+const port = 3030;
 
 app.use(cors());
 app.use(express.json());
