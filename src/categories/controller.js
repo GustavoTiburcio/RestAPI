@@ -13,7 +13,7 @@ const getCategories = (req, res) => {
             categories: results.rows.map(category => {
                 return {
                     id: category.id,
-                    name: category.category,
+                    category: category.category,
                     request: {
                         type: 'GET',
                         description: 'Retorna os detalhes de uma categoria específica.',
@@ -72,7 +72,7 @@ const addCategory = (req, res) => {
                 message: 'Categoria inserida com sucesso.',
                 createdCategory: {
                     id: results.rows[0].id,
-                    name: category,
+                    category: category,
                 },
                 request: {
                     type: 'GET',
