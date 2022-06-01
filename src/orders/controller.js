@@ -57,7 +57,7 @@ const getOrderById = (req, res) => {
                 RowsCount: order.rowCount,
                 order: order.rows,
                 orderProducts: results.rows.map(OrderProduct => {
-                    return { product_id: OrderProduct.product_id, product_price: OrderProduct.product_price, quantity: OrderProduct.quantity }
+                    return { product_id: OrderProduct.product_id, name: OrderProduct.name, product_price: OrderProduct.product_price, quantity: OrderProduct.quantity }
                 }),
                 request: {
                     type: 'GET',
@@ -73,6 +73,7 @@ const getOrderById = (req, res) => {
 const addOrder = (req, res) => {
     const { customer, discount, amount, order_date, orderProducts } = req.body;
 
+    
     pool.query(queries.addOrder, [customer, discount, amount, order_date], (error, results) => {
         if (error) {
             return res.status(500).send({
@@ -80,14 +81,30 @@ const addOrder = (req, res) => {
             });
         }
         orderProducts.map(product => {
-            pool.query(queries.addOrderProduct, [product.product_id, results.rows[0].id, product.product_price, product.quantity], (error, results) => {
-                if (error) {
-                    return res.status(500).send({
-                        error: error
-                    });
-                }
-            });
+            // pool.query(queries.checkProductExists, [product.id], (error, results) => {
+            //     if (error) {
+            //         return res.status(500).send({
+            //             error: error
+            //         });
+            //     }
+            //     const noProductFound = !results.rows.length;
+            //     console.log(noProductFound);
+    
+            //     if (noProductFound) {
+            //         return res.status(404).json({ message: `Produto ${product.id} inexistente, não foi possível ser adicinado.` });
+    
+            //     }
+            try {
+                pool.query(queries.addOrderProduct, [product.product_id, results.rows[0].id, product.product_price, product.quantity], (error, results) => {
+                    if (error) {
+                        throw error;
+                    }
+                });
+            } catch (error) {
+                console.log(error)
+            }
         });
+
         const response = {
             message: 'Venda inserida com sucesso.',
             createdOrder: {
@@ -130,39 +147,57 @@ const updateOrder = (req, res) => {
                     error: error
                 });
             }
-            pool.query(queries.removeOrderProducts, [id], (error, results) => {
-                if (error) {
-                    return res.status(500).send({
-                        error: error
-                    });
-                }             
-                orderProducts.map(product => {
-                    pool.query(queries.addOrderProduct, [product.product_id, id, product.product_price, product.quantity], (error, results) => {
-                        if (error) {
-                            return res.status(500).send({
-                                error: error
-                            });
-                        }
-                    });
-                });
-                const response = {
-                    message: 'Venda alterada com sucesso.',
-                    createdOrder: {
-                        id: id,
-                        customer: customer,
-                        discount: discount,
-                        amount: amount,
-                        order_date: order_date,
-                        orderProducts: orderProducts
-                    },
-                    request: {
-                        type: 'GET',
-                        description: 'Retorna todas as vendas.',
-                        url: 'http://localhost:3000/api/orders'
+            if (orderProducts) {
+                pool.query(queries.removeOrderProducts, [id], (error, results) => {
+                    if (error) {
+                        return res.status(500).send({
+                            error: error
+                        });
                     }
+                    orderProducts.map(product => {
+                        pool.query(queries.addOrderProduct, [product.product_id, id, product.product_price, product.quantity], (error, results) => {
+                            if (error) {
+                                return res.status(500).send({
+                                    error: error
+                                });
+                            }
+                        });
+                    });
+                    const response = {
+                        message: 'Venda alterada com sucesso.',
+                        editedOrder: {
+                            id: id,
+                            customer: customer,
+                            discount: discount,
+                            amount: amount,
+                            order_date: order_date,
+                            editedProducts: orderProducts
+                        },
+                        request: {
+                            type: 'GET',
+                            description: 'Retorna todas as vendas.',
+                            url: 'http://localhost:3000/api/orders'
+                        }
+                    }
+                    res.status(200).send(response);
+                });
+            }
+            const response = {
+                message: 'Cadastro da venda alterado com sucesso.',
+                editedOrder: {
+                    id: id,
+                    customer: customer,
+                    discount: discount,
+                    amount: amount,
+                    order_date: order_date,
+                },
+                request: {
+                    type: 'GET',
+                    description: 'Retorna todas as vendas.',
+                    url: 'http://localhost:3000/api/orders'
                 }
-                res.status(200).send(response);
-            });
+            }
+            res.status(200).send(response);
         });
     });
 };
