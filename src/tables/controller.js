@@ -75,6 +75,7 @@ const addTable = (req, res) => {
                 createdTable: {
                     id: results.rows[0].id,
                     number: number,
+                    available: available,
                 },
                 request: {
                     type: 'GET',
