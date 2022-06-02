@@ -18,6 +18,8 @@ const getOrders = (req, res) => {
                     amount: order.amount,
                     netAmount: order.amount - order.discount,
                     order_date: order.order_date,
+                    in_progress: order.in_progress,
+                    table_id: order.table_id,
                     request: {
                         type: 'GET',
                         description: 'Retorna os detalhes de uma venda específica.',
@@ -71,10 +73,10 @@ const getOrderById = (req, res) => {
 };
 
 const addOrder = (req, res) => {
-    const { customer, discount, amount, order_date, orderProducts } = req.body;
+    const { customer, discount, amount, order_date, in_progress, table_id, orderProducts } = req.body;
 
-    
-    pool.query(queries.addOrder, [customer, discount, amount, order_date], (error, results) => {
+
+    pool.query(queries.addOrder, [customer, discount, amount, order_date, in_progress, table_id], (error, results) => {
         if (error) {
             return res.status(500).send({
                 error: error
@@ -89,10 +91,10 @@ const addOrder = (req, res) => {
             //     }
             //     const noProductFound = !results.rows.length;
             //     console.log(noProductFound);
-    
+
             //     if (noProductFound) {
             //         return res.status(404).json({ message: `Produto ${product.id} inexistente, não foi possível ser adicinado.` });
-    
+
             //     }
             try {
                 pool.query(queries.addOrderProduct, [product.product_id, results.rows[0].id, product.product_price, product.quantity], (error, results) => {
@@ -113,6 +115,8 @@ const addOrder = (req, res) => {
                 discount: discount,
                 amount: amount,
                 order_date: order_date,
+                in_progress: in_progress,
+                table_id: table_id,
                 orderProducts: orderProducts
             },
             request: {

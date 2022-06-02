@@ -53,7 +53,14 @@ CREATE TABLE public.orders
     discount double precision,
     amount double precision,
     order_date timestamp without time zone,
-    CONSTRAINT orders_pkey PRIMARY KEY (id)
+    in_progress boolean,
+    table_id integer,
+    CONSTRAINT orders_pkey PRIMARY KEY (id),
+    CONSTRAINT table_id FOREIGN KEY (table_id)
+        REFERENCES public.tables (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
 )
 
 TABLESPACE pg_default;
