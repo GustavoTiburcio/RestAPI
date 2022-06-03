@@ -179,8 +179,8 @@ const updateOrder = (req, res) => {
                         },
                         request: {
                             type: 'GET',
-                            description: 'Retorna todas as vendas.',
-                            url: 'http://localhost:3000/api/orders'
+                            description: 'Retorna os detalhes de uma venda específica.',
+                            url: 'http://localhost:3000/api/orders/' + id,
                         }
                     }
                     res.status(200).send(response);
@@ -259,6 +259,47 @@ const removeOrder = (req, res) => {
     });
 };
 
+const finishOrderProgress = (req, res) => {
+    const table_id = parseInt(req.params.id);
+
+    pool.query(queries.finishOrderProgress, [table_id], (error, result) => {
+        if (error) {
+            return res.status(500).send({
+                error: error
+            });
+        }
+        pool.query(queries.finishTableOrder, [table_id], (error, results) => {
+            if (error) {
+                return res.status(500).send({
+                    error: error
+                });
+            }
+            const response = {
+                message: 'Andamento da venda alterado com sucesso.',
+                editedOrder: {
+                    order_id: result.rows[0].id,
+                    in_progress: result.rows[0].in_progress,
+                },
+                editedTable: {
+                    table_id: results.rows[0].id,
+                    available: results.rows[0].available,
+                },
+                requestOrder: {
+                    type: 'GET',
+                    description: 'Retorna os detalhes de uma venda específica.',
+                    url: 'http://localhost:3000/api/orders/' + result.rows[0].id
+                },
+                requestTable: {
+                    type: 'GET',
+                    description: 'Retorna os detalhes de uma mesa específica.',
+                    url: 'http://localhost:3000/api/tables/' + results.rows[0].id
+                }
+            }
+            res.status(200).send(response);
+        });
+    });
+};
+
 
 module.exports = {
     getOrders,
@@ -266,5 +307,6 @@ module.exports = {
     addOrder,
     removeOrder,
     updateOrder,
+    finishOrderProgress,
 
 }

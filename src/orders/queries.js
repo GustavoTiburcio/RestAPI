@@ -7,7 +7,9 @@ const addOrder = 'INSERT INTO orders(customer, discount, amount, order_date, in_
 const addOrderProduct = 'INSERT INTO orders_products(product_id, order_id, product_price, quantity) VALUES ($1, $2, $3, $4) RETURNING id';
 const removeOrder = 'DELETE FROM orders WHERE id = $1 RETURNING id';
 const removeOrderProducts = 'DELETE FROM orders_products where order_id = $1';
-const updateOrder = 'UPDATE orders set customer = $1, discount = $2, amount = $3, order_date = $4 where id = $5';
+const updateOrder = 'UPDATE orders SET customer = $1, discount = $2, amount = $3, order_date = $4 WHERE id = $5';
+const finishOrderProgress = 'UPDATE orders SET in_progress = false WHERE table_id = $1 AND in_progress = true RETURNING id, in_progress';
+const finishTableOrder = 'UPDATE tables SET available = true, customer = null WHERE id = $1 RETURNING id, available';
 
 module.exports = {
     getOrders,
@@ -20,5 +22,7 @@ module.exports = {
     removeOrder,
     removeOrderProducts,
     updateOrder,
+    finishOrderProgress,
+    finishTableOrder
 
 };

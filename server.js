@@ -11,7 +11,7 @@ const port = 3030;
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) =>{
+app.get('/', (req, res) => {
     res.status(404).json({ message: 'Rota inexistente.' });
 });
 
