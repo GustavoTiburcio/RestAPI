@@ -185,23 +185,24 @@ const updateOrder = (req, res) => {
                     }
                     res.status(200).send(response);
                 });
-            }
-            const response = {
-                message: 'Cadastro da venda alterado com sucesso.',
-                editedOrder: {
-                    id: id,
-                    customer: customer,
-                    discount: discount,
-                    amount: amount,
-                    order_date: order_date,
-                },
-                request: {
-                    type: 'GET',
-                    description: 'Retorna todas as vendas.',
-                    url: 'http://localhost:3000/api/orders'
+            } else {
+                const response = {
+                    message: 'Cadastro da venda alterado com sucesso.',
+                    editedOrder: {
+                        id: id,
+                        customer: customer,
+                        discount: discount,
+                        amount: amount,
+                        order_date: order_date,
+                    },
+                    request: {
+                        type: 'GET',
+                        description: 'Retorna todas as vendas.',
+                        url: 'http://localhost:3000/api/orders'
+                    }
                 }
+                res.status(200).send(response);
             }
-            res.status(200).send(response);
         });
     });
 };
